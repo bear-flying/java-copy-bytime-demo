@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	
+	
+    <!-- ======================== 调度工厂 ======================== -->
+    <bean id="SpringJobSchedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="CronTriggerBean"/>
+            </list>
+        </property>
+    </bean>  
+
+	<!-- ======================== 触发器 ======================== -->
+    <bean id="CronTriggerBean" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+    	<!-- 任务调度类 -->
+        <property name="jobDetail" ref="SpringQtzJobMethod"></property>
+        <!-- 任务执行时间 -->
+        <property name="cronExpression" value="${system.transCron}"></property>
+    </bean>
+    
+    <!-- 任务调度类 -->
+    <!-- 使用MethodInvokingJobDetailFactoryBean， 通过targetMethod指定调用方法-->  
+    <bean id="SpringQtzJobMethod" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="SpringQtzJob"/><!-- 任务执行类 -->
+        </property>
+        <property name="targetMethod">  
+            <value>start</value><!-- 要执行的方法名称 -->
+        </property>
+    </bean>
+    
+    <!-- 定义任务执行  目标bean -->
+    <bean id="SpringQtzJob" class="com.founder.TransInfomation"></bean>
+        
+</beans>

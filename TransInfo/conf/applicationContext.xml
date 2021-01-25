@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    	http://www.springframework.org/schema/context
+    	http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+    	
+    <!-- 
+    <bean id="propertyConfigurer"  class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    	<property name="locations">
+    		<list>
+    			<value>classpath:/system.properties</value>
+    		</list>
+    	</property>
+    </bean>
+	 -->
+	 
+	<context:property-placeholder location="classpath:/system.properties" file-encoding="UTF-8"/>
+	 
+	<bean id="version" class="com.founder.model.Version">
+		<property name="version" value="1.1"></property>
+	</bean>
+	
+	<bean id="threadManager" class="com.founder.task.ThreadManager">
+		<property name="directoryScanner" ref="directoryScanner"></property>
+		<property name="taskContext">
+			<bean class="com.founder.model.TaskContext">
+				<property name="baseDir" value="${system.path.baseDir}"></property>
+				<property name="targetDir" value="${system.path.targetDir}"></property>
+				<property name="readWay" value="${system.readWay}"></property>
+				<property name="fileExt" value="${system.fileExt}"></property>
+				<property name="dateFormat" value="${system.formatPath}"></property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="directoryScanner" class="com.founder.task.DirectoryScanner" scope="prototype">
+	</bean>
+	
+	
+</beans>
